@@ -1,7 +1,7 @@
 {
-  "name": "openapi-to-graphql",
-  "version": "2.2.6",
-  "description": "Generates a GraphQL schema for a given OpenAPI Specification (OAS)",
+  "name": "openapi-to-graphql-nullable",
+  "version": "3.0.4",
+  "description": "Fork of openapi-to-graphql that fixes nullable handling. Published to NPM since there's no other easy way to consume a Lerna package. Unmaintained.",
   "copyright.owner": "IBM Corp.",
   "contributors": [
     "Alan Cha",
