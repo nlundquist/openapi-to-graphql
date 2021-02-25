@@ -746,6 +746,17 @@ function getSchemaName(names, usedNames) {
 /**
  * Recursively add all of the properties of an object to the data definition
  */
+function addObjectPropertiesToDataDef(def, schema, required, isInputObjectType, data, oas) {
+    /**
+     * Resolve all required properties
+     *
+     * TODO: required may contain duplicates, which is not necessarily a problem
+     */
+    if (Array.isArray(schema.required)) {
+        schema.required.forEach((requiredProperty) => {
+            required.push(requiredProperty);
+        });
+    }
 function addObjectPropertiesToDataDef(def, schema, isInputObjectType, data, oas) {
     for (let propertyKey in schema.properties) {
         let propSchemaName = propertyKey;
@@ -820,7 +831,7 @@ function resolveAllOf(schema, references, data, oas) {
                     collapsedSchema.properties = {};
                 }
                 Object.entries(resolvedSchema.properties).forEach(([propertyName, property]) => {
-                    if (propertyName in collapsedSchema) {
+                    if (propertyName in collapsedSchema.properties) {
                         // Conflicting property
                         utils_1.handleWarning({
                             mitigationType: utils_1.MitigationTypes.UNRESOLVABLE_SCHEMA,
@@ -851,6 +862,17 @@ function resolveAllOf(schema, references, data, oas) {
                 }
                 resolvedSchema.anyOf.forEach((anyOfProperty) => {
                     collapsedSchema.anyOf.push(anyOfProperty);
+                });
+            }
+            // Collapse required if applicable
+            if ('required' in resolvedSchema) {
+                if (!('required' in collapsedSchema)) {
+                    collapsedSchema.required = [];
+                }
+                resolvedSchema.required.forEach((requiredProperty) => {
+                    if (!collapsedSchema.required.includes(requiredProperty)) {
+                        collapsedSchema.required.push(requiredProperty);
+                    }
                 });
             }
         });

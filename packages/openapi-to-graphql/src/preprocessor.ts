@@ -1176,7 +1176,7 @@ function resolveAllOf<TSource, TContext, TArgs>(
 
         Object.entries(resolvedSchema.properties).forEach(
           ([propertyName, property]) => {
-            if (propertyName in collapsedSchema) {
+            if (propertyName in collapsedSchema.properties) {
               // Conflicting property
 
               handleWarning({
